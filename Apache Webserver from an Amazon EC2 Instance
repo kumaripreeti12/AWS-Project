@@ -1,0 +1,84 @@
+# AWS-Project
+Installing and Launching an Apache Webserver from an Amazon EC2 Instance
+
+Scenario:
+Your company wants to start shifting from using on premises servers to using servers in the cloud. Rather than purchasing all the infrastructure in a data center they ask you to create an EC2 instance in AWS to host their new website.
+
+An Amazon EC2 instance is a virtual server in Amazon’s Elastic Compute Cloud (EC2) for running applications on the Amazon Web Services (AWS) infrastructure. Many businesses are migrating to the use of these virtual machines due to the many benefits they provide, such as reliability, security, flexibility, and cost saving.
+
+Prerequisites:
+A free AWS account set up with your email address
+An IAM user account with administrative permissions and access keys
+Objectives:
+Launch an EC2 Amazon Linux t2.micro (free tier) in a public subnet of your Default VPC.
+Create a security group that allows inbound traffic on HTTP for 0.0.0.0/0 and allows inbound traffic on SSH from your IP address.
+SSH into your EC2 instance and install Apache with a custom webpage using a BASH script.
+
+Step 1: Open the Amazon EC2 Console and choose a Region
+To begin, search EC2 in the search bar and click EC2 to access the Amazon EC2 console.
+In the navigation bar at the top of the screen, select a Region to launch the instance. We will be using the US East (N. Virginia) us-east-1 Region. Be mindful when choosing your Region because not every Amazon EC2 resource can be shared between Regions.
+
+Step 2: Configure the EC2 instance
+Under the Launch an Instance page, scroll down to Name and tag. Give your instance a name that correlates to what you are using it for. This will help you identify your instance later.
+Under Application and OS Images (Amazon Machine Image), choose Amazon Linux and click the drop down to select Amazon Linux 2 AMI (HVM)- Kernel 5.10, SSD Volume Type. This will ensure you are using the free tier eligible product.
+Under Instance type, choose t2.micro which also falls under the free tier.
+
+A key pair is essential to be able to connect to your instance securely, so be sure to complete this next step. Scroll down to key pair (login), and either choose an existing key pair or create a new one. We will be creating a new one, so click on Create new key pair.
+
+Give your key pair a name. Leave the Key pair type as RSA and the Private key file format as .pem. Then click Create key pair. The private key will automatically download to your Downloads folder on your computer, but you can relocate it to another folder for easier access if you like.
+
+Under Network settings, leave the Network and Subnet as it is. This allows you to choose the default VPC and allows instances in a default subnet to receive a public IPv4 address.
+
+Under Firewall (security groups), click the box Allow SSH traffic from and use the dropdown to select My IP. This allows inbound traffic on SSH from your IP address.
+
+Next, click the box Allow HTTP traffic from the internet to allow inbound traffic on HTTP for 0.0.0.0/0.
+
+You do not need to change anything under Configure storage, Advanced details, or Summary. Go ahead and click Launch instance.
+
+You will see a message to show that your launch was successful.
+To check to see if your instance has finished spinning up, click on Instances in the lefthand sidebar. It will take several moments for the status to update to running, so grab a snack while you wait.
+
+Step 3: SSH into your EC2 instance
+
+Subscribe to the Medium newsletter
+You will need to gather some information from the Amazon EC2 console in order to connect to your instance. Select the checkbox next to your instance and then click Connect.
+Click on the tab that says SSH client. 
+This page provides you with directions on how to SSH into the instance. Copy the command under the example to use in the command line. Next, open the SSH client that you will be using. For this demonstration, I am using PowerShell.
+
+In your terminal, you will need to change directories into the folder that contains your key. Remember that we’ve downloaded our key to the Downloads folder, so we will need to be in the same folder in the command line. Do this by running the following:
+
+cd Downloads
+Now you can paste the command that you copied to your clipboard ssh -i [keypairname.pem] ec2-user@[IP4 address] and hit enter. You will know that you are successful when you see the following screen.
+
+It’s best practice to run updates the first time you log into the system. This can be done by running the following command:
+
+sudo yum update -y
+This will take a few moments, and then you will see the following screen when updates are complete.
+
+Step 4: Install Apache with a custom webpage using a BASH script
+By default, your EC2 instance will not have any permissions to do anything, so we will have to give it the permissions of the user by using the sudo command.
+
+We will begin by running the following command to open the text editor, Vim, and create a file for our script. We’ll call our file bashscript.
+
+sudo vim bashscript
+Once the text editor is open, type i to enter insert mode. Then, we’ll input the following script:
+
+To write and exit the script, hit Esc and :wq.
+
+If you try to run the script from this point, you will find that you are not able to. This is because our EC2 instance does not have permission to execute. We have to give it the permissions of the user by running the following command:
+
+sudo chmod 755 bashscript
+
+Now, you can run the script. This may take a few moments.
+
+sudo ./bashscript
+
+This screen confirms that Apache has been installed successfully. Let’s check the status of our page.
+
+sudo systemctl status httpd
+
+Everything looks good, but we need to verify it is running on the web browser. We’ll need our IP address to do this. We’ll return to the AWS console to copy our IP address.
+
+Time to test the page. Paste the IP address into the URL bar.
+
+!!!!!!!Congratulations! You’ve successfully installed and launched an EC2 instance and created a bash script to create a custom webpage!!!!!!
