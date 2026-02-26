@@ -1,0 +1,102 @@
+Launch Your First EC2 Instance & Deploying Webpage on IIS
+
+Amazon Elastic Compute Cloud (Amazon EC2) is a web service that provides resizable compute capacity in the cloud. It is designed to make web-scale computing easier for developers. With Amazon EC2 you launch virtual server instances on the AWS cloud. Each virtual server is known as an “instance”.
+
+In this article we will go through the following sections
+1. Configuring and Launching EC2 Instance
+2. Installation of web server IIS on EC2 Instance
+3. Creating webpage and hosting it on EC2 Instance
+4. Deleting Instance
+Now we will go through each section and walk you through each step required to accomplish each task.
+
+Section 1 Configuring and Launching EC2 Instance
+The AWS Management Console is a browser-based GUI for Amazon Web Services (AWS). Through the console, a customer can manage their cloud computing, cloud storage and other resources running on the Amazon Web Services infrastructure. Now we will open AWS Management Console using the following link https://console.aws.amazon.com
+
+Then we will search EC2 Instance in the search bar and open EC2 Instance.
+
+After clicking on EC2 service, we will have EC2 service dashboard which is displaying different options for launching different type of instances including spot, saving, reserved and dedicated.
+
+We can launch EC2 Instance using two ways:
+1. Quick launch button on dashboard
+2. Navigate to Instances on the left Pane and the on the right corner click on launch instance.
+3. Now we will have different AMIs listed down that have been configured for you by AWS. Select Microsoft Windows Server 2016 Base and click on next.
+4. Next, choose an instance type to set the storage and size of your instance. t2.micro is set as the type by default and eligible for Amazon’s free tier.
+5. Next, select number of instance as 1, but if you want to launch more machine with same configuration then change this number.
+6. Next select network and subnet in which you want to launch your EC2 Instance.
+Then check the protect against accidental termination option so that when someone try to delete an instance it shows error.
+Lastly, for all other option select the default options.
+
+Next is storage section, we can add or drop volumes to our EC2 instance. You can use size according to your need. I am selecting default value as changing in size will charge amount to my AWS account.
+Next, you can add tags to your instance. Tag help us to manage your instances, images, and other Amazon EC2 resources using user specified meta data.
+
+In this tab, you can add assign previous or create new security group and assigned that to your EC2 instance. You can allow or deny inbound and outbound traffic. So we have added HTTP and HTTPS for accessing HTML page. Added RDP protocol to access through remote desktop connection.
+
+Now, just review the settings and launch your instance.
+
+On clicking launch you will have a key value pair wizard popped. A key pair, consisting of a public key and a private key, is a set of security credentials that you use to prove your identity when connecting to an Amazon EC2 instance.
+
+select create a new key value pair from the drop down. Then write a name of your key value pair and click on download key value pair. You can download this key only once when you are creating so save this pem file in important folder. Furthermore RSA encryption is used for windows and ED25519 is used for Linux instances.
+
+Now launching screen will appear displaying launching status of our resource. This will take couple of minutes to setting up our instance.
+
+Once status check is 2/2 we can access our EC2 instance. When we select launched instance, all the configured setting appears. It have public ipv4 address as shown in the picture below. We can access our instance through this IP.
+Now click on connect and there are several ways to connect to EC2 Instance.
+1. We can connect through Session Manager
+2. We can connect through RDP Client
+3. We can connect through Console
+4. Now we will select RDP tab and download RDP client. Then we will click on get password and upload the Pem file which we have downloaded before to get EC2 instance password.
+5. Now open RDP client and click on connect.
+
+RDP client will ask password for login. Just add the password extracted in the previous step to proceed.
+
+We are now in our EC2 Instance.
+a
+Section 2 Installation of web server IIS on EC2 Instance
+In this section we will first go through the definition of IIS and then we will install IIS on EC2 Instance that we have launched previously.
+
+Download the Medium app
+Internet Information Services (IIS) is a flexible, general-purpose web server from Microsoft that runs on Windows systems to serve requested HTML pages or files. The web server allows an application to process messages that arrive through specific TCP ports (by default). For example, the default port for HTTP traffic is 80, and the one for HTTPS is 443. An IIS web server runs on the Microsoft .NET platform on the Windows OS.
+
+Now lets start with the steps we need to install IIS:
+
+Step1 : Click on search button on the bottom left corner that will open window search, and then write “Server Manager” and open it as shown in the below snip.
+
+Step2 : Once Server Manager is opened click on “Add roles and features” under configure this local server menu as high lighted in the next picture.
+
+Step3 : Now wizard will be opened for installing web server to our EC2 Instance.
+
+Step4 :Select the option Role-based or feature-based installation and then click Next.
+
+Step5 :Click the option Select a server from the server pool. As we have only one server in the pool on which we are installing IIS, so there is only one server shown in the below picture. Then select that server in the Server Pool group box. Click Next to display the Select server roles page
+
+Step6 :Select the Web Server (IIS) option. When a dialog opens, click Add Features
+
+Step7 :Click Next to display the Select features page. Do not change default settings in the Features scroll box.
+
+Step8 :Click Next two times to display the Select role services page. In the Select role services page, Expand Web Server and you will see different options that can be added to the server that we are making. We are selecting all the default options.
+
+Step9 :Click on Install and wait for few minutes and click on close. Then you test the IIS installation by opening your web browser and enter ipv4 public IP in your browser and press enter and you will see the default screen for IIS.
+
+Section 3 Creating webpage and hosting it on EC2 Instance
+Now after installing IIS, open File Explorer and navigate to C Drive / inetpub/wwwroot.
+
+The wwwroot folder is new in ASP.NET 5.0. All of the static files in your project go into this folder.
+
+Create a new folder with name test and then open a new text file and save as index.html file with some data in HTML tag in the wwwroot/test folder.
+
+Now lets check if that page has is deployed or not on IIS. Open your web browser and enter ipv4 public IP address of your machine in your browser and press enter and you will see the default screen for IIS.
+
+Then in the new tab and enter ipv4 public IP address of your machine/test/index.html in your browser and press enter and you will see the HTML page you have created.
+
+Section 4 Deleting Instance
+Now in instance tab right click on instance you have created and click on terminate instance.
+
+As we have enabled protection against accidental termination, AWS will throw error when we will try to delete an instance.
+So first we will disable termination protection and then we will delete instance. Right click on AWS instance and then click on change termination protection. and then uncheck the enabled option as shown in the pictures below.
+
+Wow, now we have successfully deleted the instance that we have created earlier.
+
+Press enter or click to view image in full size
+
+Conclusion
+In this article we play with EC2 instance and have a basic overview of main functionality of it. Further more we have installed IIS Server on EC2 instance and then deployed HTML file on it. In next article I will try to show the practical example of elastic load balancer.
